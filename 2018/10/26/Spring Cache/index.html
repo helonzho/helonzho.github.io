@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring cache原理">
+<meta property="og:url" content="https://dragonzho92.github.io/2018/10/26/Spring Cache/index.html">
+<meta property="og:site_name" content="Pointing into the distance">
+<meta property="og:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-07-20T16:39:43.822Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring cache原理">
+<meta name="twitter:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://dragonzho92.github.io/2018/10/26/Spring Cache/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>spring cache原理 | Pointing into the distance</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pointing into the distance</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://dragonzho92.github.io/2018/10/26/Spring Cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="helon-zho">
+      <meta itemprop="description" content="Insist on maintenance, start a new world">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pointing into the distance">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">spring cache原理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-10-26 09:04:05" itemprop="dateCreated datePublished" datetime="2018-10-26T09:04:05+08:00">2018-10-26</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-07-21 00:39:43" itemprop="dateModified" datetime="2019-07-21T00:39:43+08:00">2019-07-21</time>
+              </span>
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Spring-Cache"><a href="#Spring-Cache" class="headerlink" title="Spring Cache"></a>Spring Cache</h1><ul>
+<li>cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box</li>
+</ul>
+<p>##spring cache base</p>
+<p>spring has a abstract immplemention for the following list:</p>
+<ol>
+<li><p>JDK <code>java.util.concurrent.ConcurrentMap</code> based caches</p>
+<blockquote>
+<p> need the Cache manager to be configured and the data stored in the in-memory</p>
+</blockquote>
+</li>
+<li><p>EhCache</p>
+<blockquote>
+<p>need add the ehcache.xml file in the classpath</p>
+</blockquote>
+</li>
+<li><p><a href="https://javabeat.net/spring-data-gemfire/" target="_blank" rel="noopener">Gemfire Cache</a></p>
+</li>
+<li><p>Guava Caches</p>
+</li>
+<li><p>JSR 107 complaint caches</p>
+</li>
+</ol>
+<h2 id="spring-cache-annotation"><a href="#spring-cache-annotation" class="headerlink" title="spring cache annotation"></a>spring cache annotation</h2><ol>
+<li><p>@Cacheable</p>
+<ul>
+<li><p>annotate a method, and request will not execute the method, instead to get result from cache</p>
+<blockquote>
+<p>cacheManager: bean name of cache manager.</p>
+<p><strong>cacheNames</strong>: matching the qualifier value or bean name of a specific bean definition</p>
+<p><strong>cacheResolver</strong></p>
+<p><strong>condition</strong></p>
+</blockquote>
+</li>
+<li><p>当重复使用相同参数调用方法的时候，方法本身不会被调用执行，即方法本身被略过了，取而代之的是方法的结果直接从缓存中找到并返回了</p>
+</li>
+</ul>
+</li>
+<li><p>@CacheEvict</p>
+<ul>
+<li>clear the cache</li>
+</ul>
+</li>
+<li><p>@CachePut</p>
+<ul>
+<li>这个注释可以确保方法被执行，同时方法的返回值也被记录到缓存中。</li>
+</ul>
+</li>
+<li><p>@Caching</p>
+</li>
+<li><p>@CacheConfig</p>
+</li>
+</ol>
+<h2 id="Enable-spring-caching"><a href="#Enable-spring-caching" class="headerlink" title="Enable spring caching"></a>Enable spring caching</h2><ol>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span> </span></span><br><span class="line">        &lt;cache:annotation-driven /&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span>JCache (JSR – 107) Support</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="JCache-JSR-–-107-Support"><a href="#JCache-JSR-–-107-Support" class="headerlink" title="JCache (JSR – 107) Support"></a>JCache (JSR – 107) Support</h2><table>
+<thead>
+<tr>
+<th>@Cacheable</th>
+<th>@CacheResult</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@CachePut</td>
+<td>@CachePut</td>
+<td>There is no change in the annotation name</td>
+</tr>
+<tr>
+<td>@CacheEvict</td>
+<td>@CacheRemove</td>
+<td>@CacheRemove evicts conditionaly whenthere is exception throw from the method.</td>
+</tr>
+<tr>
+<td>@CacheEvict(allEntries=true)</td>
+<td>@CacheRemoveAll</td>
+<td>JCache adds another annotation forremoving all the cache entries</td>
+</tr>
+<tr>
+<td>@CacheConfig</td>
+<td>@CacheDefaults</td>
+<td>Both the annotations work similar</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=<span class="string">"cacheManager"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"org.springframework.cache.jcache.JCacheCacheManager"</span> p:cache-manager-ref=<span class="string">"jCacheManager"</span>/&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- JSR-<span class="number">107</span> cache manager setup --&gt;</span><br><span class="line">&lt;bean id=<span class="string">"jCacheManager"</span> .../&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="EhCache-Configuration"><a href="#EhCache-Configuration" class="headerlink" title="EhCache Configuration"></a>EhCache Configuration</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cacheManager"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.ehcache.EhCacheCacheManager"</span> <span class="attr">p:cache-manager-ref</span>=<span class="string">"ehcache"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- EhCache library setup --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"ehcache"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.ehcache.EhCacheManagerFactoryBean"</span> <span class="attr">p:config-location</span>=<span class="string">"ehcache.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CacheManager <span class="title">ehCacheManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> EhCacheCacheManager(ehCacheCacheManager().getObject());</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> EhCacheManagerFactoryBean <span class="title">ehCacheCacheManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	EhCacheManagerFactoryBean cmfb = <span class="keyword">new</span> EhCacheManagerFactoryBean();</span><br><span class="line">	cmfb.setConfigLocation(<span class="keyword">new</span> ClassPathResource(<span class="string">"ehcache.xml"</span>));</span><br><span class="line">	cmfb.setShared(<span class="keyword">true</span>);</span><br><span class="line">	<span class="keyword">return</span> cmfb;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ehcache.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">"ehcache.xsd"</span> <span class="attr">updateCheck</span>=<span class="string">"true"</span> <span class="attr">monitoring</span>=<span class="string">"autodetect"</span> <span class="attr">dynamicConfig</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">diskStore</span> <span class="attr">path</span>=<span class="string">"java.io.tmpdir"</span> /&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">cache</span> <span class="attr">name</span>=<span class="string">"movieFindCache"</span> <span class="attr">maxEntriesLocalHeap</span>=<span class="string">"10000"</span> <span class="attr">maxEntriesLocalDisk</span>=<span class="string">"1000"</span> <span class="attr">eternal</span>=<span class="string">"false"</span> <span class="attr">diskSpoolBufferSizeMB</span>=<span class="string">"20"</span> <span class="attr">timeToIdleSeconds</span>=<span class="string">"300"</span> <span class="attr">timeToLiveSeconds</span>=<span class="string">"600"</span> <span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">"LFU"</span> <span class="attr">transactionalMode</span>=<span class="string">"off"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">persistence</span> <span class="attr">strategy</span>=<span class="string">"localTempSwap"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">cache</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Cache-Fallback-Mechanism"><a href="#Cache-Fallback-Mechanism" class="headerlink" title="Cache Fallback Mechanism"></a>Cache Fallback Mechanism</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cacheManager"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.support.CompositeCacheManager"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cacheManagers"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ref</span> <span class="attr">bean</span>=<span class="string">"jdkCache"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ref</span> <span class="attr">bean</span>=<span class="string">"ehCache"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"fallbackToNoOpCache"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Spring-Boot-Application"><a href="#Spring-Boot-Application" class="headerlink" title="Spring Boot Application"></a>Spring Boot Application</h2><p>​    Spring Boot Auto Configuration Support -&gt; <strong>Update: After the release of Spring Boot 1.3.0</strong></p>
+<p>list of caching technologies supported as of now</p>
+<ul>
+<li><a href="https://javabeat.net/ehcache/" target="_blank" rel="noopener">EhCache</a></li>
+<li>Hazelcast</li>
+<li>Infinispan</li>
+<li>Any JCache (JSR 107) implementation</li>
+<li><a href="https://javabeat.net/spring-data-redis-example/" target="_blank" rel="noopener">Redis</a></li>
+<li>Guava</li>
+<li>Simple Map based in-memory cache also supported in the auto configuration</li>
+</ul>
+<h2 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h2><p>This section shows some of the common error or exceptions that are encountered while developing this application. If you see any other issues, please write it in the comments section.</p>
+<p>###<strong>CacheManager Registration Problem:</strong></p>
+<p>** **The below exception will be thrown when you have enabled caching functionality and not configured any of the cache manager. You should have atleast one cache manager to store the incoming catches.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.IllegalStateException: No CacheResolver specified, and no bean of type CacheManager found. Register a CacheManager bean or remove the @EnableCaching annotation from your configuration.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:189)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:757)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:480)</span><br></pre></td></tr></table></figure>
+
+<p>###*<em>Cache Manager Name Problem: *</em></p>
+<p>When you are not specifying the cache name in the cache manager and you are trying to use it in the @Cacheable annotation. For example look at the following entry:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Cacheable(value=&quot;users1&quot;)</span><br><span class="line">	public UserDetails findById(String id) &#123;</span><br><span class="line">		slowResponsee();</span><br><span class="line">		return new UserDetails(id, &quot;Name&quot;+id);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In the above code, it tries to search for the cache manager with the name of “users”, if it is not finding then it will throw the below exception.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: Cannot find cache named &apos;users1&apos; for CacheableOperation[public net.javabeat.spring.cache.UserDetails net.javabeat.spring.cache.UserRepositoryImpl.findById(java.lang.String)] caches=[users1] | key=&apos;&apos; | keyGenerator=&apos;&apos; | cacheManager=&apos;&apos; | cacheResolver=&apos;&apos; | condition=&apos;&apos; | unless=&apos;&apos;</span><br><span class="line">	at org.springframework.cache.interceptor.AbstractCacheResolver.resolveCaches(AbstractCacheResolver.java:81)</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.getCaches(CacheAspectSupport.java:214)</span><br></pre></td></tr></table></figure>
+
+<p>###<strong>Primary or Declare a Specific CacheManager Exception</strong></p>
+<p>In the above code, we have declaraed JDK cache and EhCache for our applications. But, if the application could not find any of these stores, then we have configured <code>fallbackToNoOpCache</code> to execute methods without any exceptions thrown at runtime.</p>
+<p>When you are declaring more than one cache managers in your application, your application may not be able to resolve which cache manager has to be used for the annotation not using the <code>cacheManager</code> attribute to specify the cache manager name. In that case, you would encounter the following exception.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: No CacheResolver specified, and no unique bean of type CacheManager found. Mark one as primary or declare a specific CacheManager to use.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:185)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br></pre></td></tr></table></figure>
+
+<p>The above problem can be resolved by making one of the cache manager as the primary by annotating as <code>@Primary</code> as below:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Primary</span><br><span class="line">	@Bean</span><br><span class="line">	public CacheManager jdkCacheManager() &#123;</span><br><span class="line">		return new ConcurrentMapCacheManager(&quot;users&quot;);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/26/Mybatis数据库连接/" rel="next" title="mybatis基本原理和动态SQL">
+                <i class="fa fa-chevron-left"></i> mybatis基本原理和动态SQL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/26/spring-framework-reference/" rel="prev" title="spring reference 阅读笔记">
+                spring reference 阅读笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">helon-zho</p>
+  <div class="site-description motion-element" itemprop="description">Insist on maintenance, start a new world</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+
+    
+
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cache"><span class="nav-number">1.</span> <span class="nav-text">Spring Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-cache-annotation"><span class="nav-number">1.1.</span> <span class="nav-text">spring cache annotation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Enable-spring-caching"><span class="nav-number">1.2.</span> <span class="nav-text">Enable spring caching</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JCache-JSR-–-107-Support"><span class="nav-number">1.3.</span> <span class="nav-text">JCache (JSR – 107) Support</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EhCache-Configuration"><span class="nav-number">1.4.</span> <span class="nav-text">EhCache Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache-Fallback-Mechanism"><span class="nav-number">1.5.</span> <span class="nav-text">Cache Fallback Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot-Application"><span class="nav-number">1.6.</span> <span class="nav-text">Spring Boot Application</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exceptions"><span class="nav-number">1.7.</span> <span class="nav-text">Exceptions</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">helon-zho</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

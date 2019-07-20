@@ -341,7 +341,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:38:28" itemprop="dateModified" datetime="2019-07-21T00:38:28+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:55:17" itemprop="dateModified" datetime="2019-07-21T00:55:17+08:00">2019-07-21</time>
               </span>
             
           
@@ -399,8 +399,7 @@
 <li><p>Guava Cache</p>
 </li>
 </ol>
-<p>###分布式缓存</p>
-<ol>
+<h3 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h3><ol>
 <li>memcached</li>
 <li>redis</li>
 </ol>
@@ -890,7 +889,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:39:43" itemprop="dateModified" datetime="2019-07-21T00:39:43+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:56:25" itemprop="dateModified" datetime="2019-07-21T00:56:25+08:00">2019-07-21</time>
               </span>
             
           
@@ -934,8 +933,7 @@
             <h1 id="Spring-Cache"><a href="#Spring-Cache" class="headerlink" title="Spring Cache"></a>Spring Cache</h1><ul>
 <li>cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box</li>
 </ul>
-<p>##spring cache base</p>
-<p>spring has a abstract immplemention for the following list:</p>
+<h2 id="spring-cache-base"><a href="#spring-cache-base" class="headerlink" title="spring cache base"></a>spring cache base</h2><p>spring has a abstract immplemention for the following list:</p>
 <ol>
 <li><p>JDK <code>java.util.concurrent.ConcurrentMap</code> based caches</p>
 <blockquote>
@@ -1044,19 +1042,16 @@
 <li>Simple Map based in-memory cache also supported in the auto configuration</li>
 </ul>
 <h2 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h2><p>This section shows some of the common error or exceptions that are encountered while developing this application. If you see any other issues, please write it in the comments section.</p>
-<p>###<strong>CacheManager Registration Problem:</strong></p>
-<p>** **The below exception will be thrown when you have enabled caching functionality and not configured any of the cache manager. You should have atleast one cache manager to store the incoming catches.</p>
+<h3 id="CacheManager-Registration-Problem"><a href="#CacheManager-Registration-Problem" class="headerlink" title="CacheManager Registration Problem:"></a><strong>CacheManager Registration Problem:</strong></h3><p>** **The below exception will be thrown when you have enabled caching functionality and not configured any of the cache manager. You should have atleast one cache manager to store the incoming catches.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.IllegalStateException: No CacheResolver specified, and no bean of type CacheManager found. Register a CacheManager bean or remove the @EnableCaching annotation from your configuration.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:189)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:757)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:480)</span><br></pre></td></tr></table></figure>
 
-<p>###*<em>Cache Manager Name Problem: *</em></p>
-<p>When you are not specifying the cache name in the cache manager and you are trying to use it in the @Cacheable annotation. For example look at the following entry:</p>
+<h3 id="Cache-Manager-Name-Problem"><a href="#Cache-Manager-Name-Problem" class="headerlink" title="*Cache Manager Name Problem: *"></a>*<em>Cache Manager Name Problem: *</em></h3><p>When you are not specifying the cache name in the cache manager and you are trying to use it in the @Cacheable annotation. For example look at the following entry:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Cacheable(value=&quot;users1&quot;)</span><br><span class="line">	public UserDetails findById(String id) &#123;</span><br><span class="line">		slowResponsee();</span><br><span class="line">		return new UserDetails(id, &quot;Name&quot;+id);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>In the above code, it tries to search for the cache manager with the name of “users”, if it is not finding then it will throw the below exception.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: Cannot find cache named &apos;users1&apos; for CacheableOperation[public net.javabeat.spring.cache.UserDetails net.javabeat.spring.cache.UserRepositoryImpl.findById(java.lang.String)] caches=[users1] | key=&apos;&apos; | keyGenerator=&apos;&apos; | cacheManager=&apos;&apos; | cacheResolver=&apos;&apos; | condition=&apos;&apos; | unless=&apos;&apos;</span><br><span class="line">	at org.springframework.cache.interceptor.AbstractCacheResolver.resolveCaches(AbstractCacheResolver.java:81)</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.getCaches(CacheAspectSupport.java:214)</span><br></pre></td></tr></table></figure>
 
-<p>###<strong>Primary or Declare a Specific CacheManager Exception</strong></p>
-<p>In the above code, we have declaraed JDK cache and EhCache for our applications. But, if the application could not find any of these stores, then we have configured <code>fallbackToNoOpCache</code> to execute methods without any exceptions thrown at runtime.</p>
+<h3 id="Primary-or-Declare-a-Specific-CacheManager-Exception"><a href="#Primary-or-Declare-a-Specific-CacheManager-Exception" class="headerlink" title="Primary or Declare a Specific CacheManager Exception"></a><strong>Primary or Declare a Specific CacheManager Exception</strong></h3><p>In the above code, we have declaraed JDK cache and EhCache for our applications. But, if the application could not find any of these stores, then we have configured <code>fallbackToNoOpCache</code> to execute methods without any exceptions thrown at runtime.</p>
 <p>When you are declaring more than one cache managers in your application, your application may not be able to resolve which cache manager has to be used for the annotation not using the <code>cacheManager</code> attribute to specify the cache manager name. In that case, you would encounter the following exception.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: No CacheResolver specified, and no unique bean of type CacheManager found. Mark one as primary or declare a specific CacheManager to use.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:185)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br></pre></td></tr></table></figure>
 
@@ -1179,7 +1174,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:39:20" itemprop="dateModified" datetime="2019-07-21T00:39:20+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:58:32" itemprop="dateModified" datetime="2019-07-21T00:58:32+08:00">2019-07-21</time>
               </span>
             
           
@@ -1231,8 +1226,7 @@
 5. 缓存会存储1024个对象cache标签常用属性：
 6. cache标签常用属性：</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cache</span></span></span><br><span class="line">eviction="FIFO" &lt;!--回收策略为先进先出--&gt;</span><br><span class="line">flushInterval="60000" <span class="comment">&lt;!--自动刷新时间60s--&gt;</span></span><br><span class="line">size="512" <span class="comment">&lt;!--最多缓存512个引用对象--&gt;</span></span><br><span class="line">readOnly="true"/&gt; <span class="comment">&lt;!--只读--&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>####缓存数据更新机制</p>
-<p>​    当某一个作用域(一级缓存Session/二级缓存Namespaces)的进行了 C/U/D 操作后，默认该作用域下所有 select 中的缓存将被clear。</p>
+<h4 id="缓存数据更新机制"><a href="#缓存数据更新机制" class="headerlink" title="缓存数据更新机制"></a>缓存数据更新机制</h4><p>​    当某一个作用域(一级缓存Session/二级缓存Namespaces)的进行了 C/U/D 操作后，默认该作用域下所有 select 中的缓存将被clear。</p>
 <h3 id="动态sql"><a href="#动态sql" class="headerlink" title="动态sql"></a>动态sql</h3><h4 id="selectKey"><a href="#selectKey" class="headerlink" title="selectKey"></a>selectKey</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 插入学生 自动主键--&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"createStudentAutoKey"</span> <span class="attr">parameterType</span>=<span class="string">"liming.student.manager.data.model.StudentEntity"</span> <span class="attr">keyProperty</span>=<span class="string">"studentId"</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">selectKey</span> <span class="attr">keyProperty</span>=<span class="string">"studentId"</span> <span class="attr">resultType</span>=<span class="string">"String"</span> <span class="attr">order</span>=<span class="string">"BEFORE"</span>&gt;</span>  </span><br><span class="line">        select nextval('student')  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">selectKey</span>&gt;</span>  </span><br><span class="line">    INSERT INTO STUDENT_TBL(STUDENT_ID, STUDENT_NAME, STUDENT_SEX, STUDENT_BIRTHDAY, 				STUDENT_PHOTO, CLASS_ID, PLACE_ID)  </span><br><span class="line">    	VALUES (#&#123;studentId&#125;, #&#123;studentName&#125;, #&#123;studentSex&#125;, #&#123;studentBirthday&#125;, #					&#123;studentPhoto, javaType=byte[], jdbcType=BLOB,				    typeHandler=org.apache.ibatis.type.BlobTypeHandler&#125;, #&#123;classId&#125;,  #&#123;placeId&#125;)  </span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <table>
@@ -1355,8 +1349,7 @@
 <li>ResultSetHandler(handleResultSets, handleOutputParameters)</li>
 <li>StatementHandler(prepare, parameterize, batch, update, query)</li>
 </ul>
-<p>####environments</p>
-<ul>
+<h4 id="environments"><a href="#environments" class="headerlink" title="environments"></a>environments</h4><ul>
 <li><p>MyBatis 可以配置多个环境。这可以帮助你SQL 映射对应多种数据库等。</p>
 </li>
 <li><p>可以配置transactionManager、dataSource等</p>
@@ -1366,16 +1359,7 @@
 
 <h3 id="扩展Dao层"><a href="#扩展Dao层" class="headerlink" title="扩展Dao层"></a>扩展Dao层</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现自己的dao接口并且继承SqlSessionDaoSupport，使用getSqlSession()获取SqlSessionTemplate来执行SQL</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDAOImpl</span> <span class="keyword">extends</span> <span class="title">SqlSessionDaoSupport</span> <span class="keyword">implements</span> <span class="title">UserDAO</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Article&gt; <span class="title">getUserArticles</span><span class="params">(<span class="keyword">int</span> userid)</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.getSqlSession().selectList(<span class="string">"com.yihaomen.inter.IUserOperation.getUserArticles"</span>,userid);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="从JDBC到Mybatis"><a href="#从JDBC到Mybatis" class="headerlink" title="从JDBC到Mybatis"></a><a href="http://www.cnblogs.com/jeffen/p/6248999.html" target="_blank" rel="noopener">从JDBC到Mybatis</a></h3><h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a><strong><code>问题：</code></strong></h2><p>###1. mybatis里面大量的代理是如何处理的？</p>
-<p>###2. session是如何管理的？生命周期？</p>
-<p>###3. 如何对接其他的数据源？</p>
-<p>###4. 如何对接其他的数据源？</p>
-<p>###5. 一次查询经历的流程？</p>
-<p>###6. 初始化流程?</p>
-<p>###7. 如何与spring对接？</p>
-<p>###8. 如何优化性能？</p>
-<p>###9. MappedStatement。</p>
-
+<h3 id="从JDBC到Mybatis"><a href="#从JDBC到Mybatis" class="headerlink" title="从JDBC到Mybatis"></a><a href="http://www.cnblogs.com/jeffen/p/6248999.html" target="_blank" rel="noopener">从JDBC到Mybatis</a></h3><h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a><strong><code>问题：</code></strong></h2><h3 id="1-mybatis里面大量的代理是如何处理的？"><a href="#1-mybatis里面大量的代理是如何处理的？" class="headerlink" title="1. mybatis里面大量的代理是如何处理的？"></a>1. mybatis里面大量的代理是如何处理的？</h3><h3 id="2-session是如何管理的？生命周期？"><a href="#2-session是如何管理的？生命周期？" class="headerlink" title="2. session是如何管理的？生命周期？"></a>2. session是如何管理的？生命周期？</h3><h3 id="3-如何对接其他的数据源？"><a href="#3-如何对接其他的数据源？" class="headerlink" title="3. 如何对接其他的数据源？"></a>3. 如何对接其他的数据源？</h3><h3 id="4-如何对接其他的数据源？"><a href="#4-如何对接其他的数据源？" class="headerlink" title="4. 如何对接其他的数据源？"></a>4. 如何对接其他的数据源？</h3><h3 id="5-一次查询经历的流程？"><a href="#5-一次查询经历的流程？" class="headerlink" title="5. 一次查询经历的流程？"></a>5. 一次查询经历的流程？</h3><h3 id="6-初始化流程"><a href="#6-初始化流程" class="headerlink" title="6. 初始化流程?"></a>6. 初始化流程?</h3><h3 id="7-如何与spring对接？"><a href="#7-如何与spring对接？" class="headerlink" title="7. 如何与spring对接？"></a>7. 如何与spring对接？</h3><h3 id="8-如何优化性能？"><a href="#8-如何优化性能？" class="headerlink" title="8. 如何优化性能？"></a>8. 如何优化性能？</h3><h3 id="9-MappedStatement。"><a href="#9-MappedStatement。" class="headerlink" title="9. MappedStatement。"></a>9. MappedStatement。</h3>
           
         
       
@@ -2011,7 +1995,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:39:31" itemprop="dateModified" datetime="2019-07-21T00:39:31+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:59:19" itemprop="dateModified" datetime="2019-07-21T00:59:19+08:00">2019-07-21</time>
               </span>
             
           
@@ -2059,8 +2043,7 @@
 <li>java的TreeMap实现</li>
 </ul>
 <p>二叉搜索树的搜索算法-&gt; RBTree 查询算法</p>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>###properties-rules</p>
-<ol>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h3 id="properties-rules"><a href="#properties-rules" class="headerlink" title="properties-rules"></a>properties-rules</h3><ol>
 <li>节点非红则黑</li>
 <li>根节点是黑色，叶子节点全是null</li>
 <li>红色节点的父节点和子节点都是黑色/红色节点的子节点全是黑色</li>

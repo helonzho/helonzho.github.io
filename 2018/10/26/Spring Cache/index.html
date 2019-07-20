@@ -93,17 +93,17 @@
   };
 </script>
 
-  <meta name="description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+  <meta name="description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  spring cache basespring has a abstract immplemention for the following lis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring cache原理">
 <meta property="og:url" content="https://dragonzho92.github.io/2018/10/26/Spring Cache/index.html">
 <meta property="og:site_name" content="Pointing into the distance">
-<meta property="og:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+<meta property="og:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  spring cache basespring has a abstract immplemention for the following lis">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-07-20T16:39:43.822Z">
+<meta property="og:updated_time" content="2019-07-20T16:56:25.417Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring cache原理">
-<meta name="twitter:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  ##spring cache base spring has a abstract immplemention for the following">
+<meta name="twitter:description" content="Spring Cache cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box  spring cache basespring has a abstract immplemention for the following lis">
 
 
 
@@ -339,7 +339,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:39:43" itemprop="dateModified" datetime="2019-07-21T00:39:43+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:56:25" itemprop="dateModified" datetime="2019-07-21T00:56:25+08:00">2019-07-21</time>
               </span>
             
           
@@ -381,8 +381,7 @@
         <h1 id="Spring-Cache"><a href="#Spring-Cache" class="headerlink" title="Spring Cache"></a>Spring Cache</h1><ul>
 <li>cache storage is not implemented by Spring, where as enabling and caching is supported by spring out of the box</li>
 </ul>
-<p>##spring cache base</p>
-<p>spring has a abstract immplemention for the following list:</p>
+<h2 id="spring-cache-base"><a href="#spring-cache-base" class="headerlink" title="spring cache base"></a>spring cache base</h2><p>spring has a abstract immplemention for the following list:</p>
 <ol>
 <li><p>JDK <code>java.util.concurrent.ConcurrentMap</code> based caches</p>
 <blockquote>
@@ -491,19 +490,16 @@
 <li>Simple Map based in-memory cache also supported in the auto configuration</li>
 </ul>
 <h2 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h2><p>This section shows some of the common error or exceptions that are encountered while developing this application. If you see any other issues, please write it in the comments section.</p>
-<p>###<strong>CacheManager Registration Problem:</strong></p>
-<p>** **The below exception will be thrown when you have enabled caching functionality and not configured any of the cache manager. You should have atleast one cache manager to store the incoming catches.</p>
+<h3 id="CacheManager-Registration-Problem"><a href="#CacheManager-Registration-Problem" class="headerlink" title="CacheManager Registration Problem:"></a><strong>CacheManager Registration Problem:</strong></h3><p>** **The below exception will be thrown when you have enabled caching functionality and not configured any of the cache manager. You should have atleast one cache manager to store the incoming catches.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.IllegalStateException: No CacheResolver specified, and no bean of type CacheManager found. Register a CacheManager bean or remove the @EnableCaching annotation from your configuration.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:189)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:757)</span><br><span class="line">	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:480)</span><br></pre></td></tr></table></figure>
 
-<p>###*<em>Cache Manager Name Problem: *</em></p>
-<p>When you are not specifying the cache name in the cache manager and you are trying to use it in the @Cacheable annotation. For example look at the following entry:</p>
+<h3 id="Cache-Manager-Name-Problem"><a href="#Cache-Manager-Name-Problem" class="headerlink" title="*Cache Manager Name Problem: *"></a>*<em>Cache Manager Name Problem: *</em></h3><p>When you are not specifying the cache name in the cache manager and you are trying to use it in the @Cacheable annotation. For example look at the following entry:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Cacheable(value=&quot;users1&quot;)</span><br><span class="line">	public UserDetails findById(String id) &#123;</span><br><span class="line">		slowResponsee();</span><br><span class="line">		return new UserDetails(id, &quot;Name&quot;+id);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>In the above code, it tries to search for the cache manager with the name of “users”, if it is not finding then it will throw the below exception.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalArgumentException: Cannot find cache named &apos;users1&apos; for CacheableOperation[public net.javabeat.spring.cache.UserDetails net.javabeat.spring.cache.UserRepositoryImpl.findById(java.lang.String)] caches=[users1] | key=&apos;&apos; | keyGenerator=&apos;&apos; | cacheManager=&apos;&apos; | cacheResolver=&apos;&apos; | condition=&apos;&apos; | unless=&apos;&apos;</span><br><span class="line">	at org.springframework.cache.interceptor.AbstractCacheResolver.resolveCaches(AbstractCacheResolver.java:81)</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.getCaches(CacheAspectSupport.java:214)</span><br></pre></td></tr></table></figure>
 
-<p>###<strong>Primary or Declare a Specific CacheManager Exception</strong></p>
-<p>In the above code, we have declaraed JDK cache and EhCache for our applications. But, if the application could not find any of these stores, then we have configured <code>fallbackToNoOpCache</code> to execute methods without any exceptions thrown at runtime.</p>
+<h3 id="Primary-or-Declare-a-Specific-CacheManager-Exception"><a href="#Primary-or-Declare-a-Specific-CacheManager-Exception" class="headerlink" title="Primary or Declare a Specific CacheManager Exception"></a><strong>Primary or Declare a Specific CacheManager Exception</strong></h3><p>In the above code, we have declaraed JDK cache and EhCache for our applications. But, if the application could not find any of these stores, then we have configured <code>fallbackToNoOpCache</code> to execute methods without any exceptions thrown at runtime.</p>
 <p>When you are declaring more than one cache managers in your application, your application may not be able to resolve which cache manager has to be used for the annotation not using the <code>cacheManager</code> attribute to specify the cache manager name. In that case, you would encounter the following exception.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: No CacheResolver specified, and no unique bean of type CacheManager found. Mark one as primary or declare a specific CacheManager to use.</span><br><span class="line">	at org.springframework.cache.interceptor.CacheAspectSupport.afterSingletonsInstantiated(CacheAspectSupport.java:185)</span><br><span class="line">	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:775)</span><br></pre></td></tr></table></figure>
 
@@ -663,7 +659,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cache"><span class="nav-number">1.</span> <span class="nav-text">Spring Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-cache-annotation"><span class="nav-number">1.1.</span> <span class="nav-text">spring cache annotation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Enable-spring-caching"><span class="nav-number">1.2.</span> <span class="nav-text">Enable spring caching</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JCache-JSR-–-107-Support"><span class="nav-number">1.3.</span> <span class="nav-text">JCache (JSR – 107) Support</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EhCache-Configuration"><span class="nav-number">1.4.</span> <span class="nav-text">EhCache Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache-Fallback-Mechanism"><span class="nav-number">1.5.</span> <span class="nav-text">Cache Fallback Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot-Application"><span class="nav-number">1.6.</span> <span class="nav-text">Spring Boot Application</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exceptions"><span class="nav-number">1.7.</span> <span class="nav-text">Exceptions</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cache"><span class="nav-number">1.</span> <span class="nav-text">Spring Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-cache-base"><span class="nav-number">1.1.</span> <span class="nav-text">spring cache base</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring-cache-annotation"><span class="nav-number">1.2.</span> <span class="nav-text">spring cache annotation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Enable-spring-caching"><span class="nav-number">1.3.</span> <span class="nav-text">Enable spring caching</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JCache-JSR-–-107-Support"><span class="nav-number">1.4.</span> <span class="nav-text">JCache (JSR – 107) Support</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EhCache-Configuration"><span class="nav-number">1.5.</span> <span class="nav-text">EhCache Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache-Fallback-Mechanism"><span class="nav-number">1.6.</span> <span class="nav-text">Cache Fallback Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot-Application"><span class="nav-number">1.7.</span> <span class="nav-text">Spring Boot Application</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exceptions"><span class="nav-number">1.8.</span> <span class="nav-text">Exceptions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CacheManager-Registration-Problem"><span class="nav-number">1.8.1.</span> <span class="nav-text">CacheManager Registration Problem:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-Manager-Name-Problem"><span class="nav-number">1.8.2.</span> <span class="nav-text">*Cache Manager Name Problem: *</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Primary-or-Declare-a-Specific-CacheManager-Exception"><span class="nav-number">1.8.3.</span> <span class="nav-text">Primary or Declare a Specific CacheManager Exception</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

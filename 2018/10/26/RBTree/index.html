@@ -93,17 +93,17 @@
   };
 </script>
 
-  <meta name="description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法###properties-rules  节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点">
+  <meta name="description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法properties-rules 节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点都是黑色">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构--红黑树">
 <meta property="og:url" content="https://dragonzho92.github.io/2018/10/26/RBTree/index.html">
 <meta property="og:site_name" content="Pointing into the distance">
-<meta property="og:description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法###properties-rules  节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点">
+<meta property="og:description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法properties-rules 节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点都是黑色">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-07-20T16:39:31.514Z">
+<meta property="og:updated_time" content="2019-07-20T16:59:19.664Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构--红黑树">
-<meta name="twitter:description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法###properties-rules  节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点">
+<meta name="twitter:description" content="应用 著名的linux进程调度Completely Fair Scheduler，用红黑树管理进程控制块 epoll在内核中的实现，用红黑树管理事件块 nginx中，用红黑树管理timer等 java的TreeMap实现  二叉搜索树的搜索算法-&amp;gt; RBTree 查询算法 算法properties-rules 节点非红则黑 根节点是黑色，叶子节点全是null 红色节点的父节点和子节点都是黑色">
 
 
 
@@ -339,7 +339,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-21 00:39:31" itemprop="dateModified" datetime="2019-07-21T00:39:31+08:00">2019-07-21</time>
+                <time title="Modified: 2019-07-21 00:59:19" itemprop="dateModified" datetime="2019-07-21T00:59:19+08:00">2019-07-21</time>
               </span>
             
           
@@ -385,8 +385,7 @@
 <li>java的TreeMap实现</li>
 </ul>
 <p>二叉搜索树的搜索算法-&gt; RBTree 查询算法</p>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>###properties-rules</p>
-<ol>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h3 id="properties-rules"><a href="#properties-rules" class="headerlink" title="properties-rules"></a>properties-rules</h3><ol>
 <li>节点非红则黑</li>
 <li>根节点是黑色，叶子节点全是null</li>
 <li>红色节点的父节点和子节点都是黑色/红色节点的子节点全是黑色</li>
@@ -578,7 +577,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">1.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修正"><span class="nav-number">2.1.</span> <span class="nav-text">修正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入"><span class="nav-number">2.2.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TreeMap"><span class="nav-number">2.3.</span> <span class="nav-text">TreeMap</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">1.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#properties-rules"><span class="nav-number">2.1.</span> <span class="nav-text">properties-rules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修正"><span class="nav-number">2.2.</span> <span class="nav-text">修正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入"><span class="nav-number">2.3.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TreeMap"><span class="nav-number">2.4.</span> <span class="nav-text">TreeMap</span></a></li></ol></li></ol></div>
             
 
           </div>
